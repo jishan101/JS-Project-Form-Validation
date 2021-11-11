@@ -1,5 +1,11 @@
 const UI = {
-    validSubmission: [],
+    isValidFirstName: false,
+    isValidLastName: false,
+    isValidUsername: false,
+    isValidEmail: false,
+    isValidPassword: false,
+    isValidConfirm: false,
+    isValidPhone: false,
 
     selector() {
         const msgWrapperElm = document.querySelector("#messageWrapper");
@@ -48,14 +54,12 @@ const UI = {
         elm.textContent = msg;
         elm.classList.remove("failure");
         elm.classList.add("success");
-        this.validSubmission.push(true);
     },
 
     failureMsg(elm, msg) {
         elm.textContent = msg;
         elm.classList.remove("success");
         elm.classList.add("failure");
-        this.validSubmission.push(false);
     },
 
     firstNameValidation() {
@@ -63,8 +67,10 @@ const UI = {
 
         if(/^[A-Z][A-z]*-?\.?[A-z]*[\s]*[A-z]*$/.test(firstNameElm.value)) {
             this.successMsg(firstNameMsgElm, "Looks good.");
+            this.isValidFirstName = true;
         } else {
             this.failureMsg(firstNameMsgElm, "First letter should be capital.");
+            this.isValidFirstName = false;
         }
     },
 
@@ -73,8 +79,10 @@ const UI = {
 
         if(/^[A-z]{1,}-?[\s]*[A-z]*$/.test(lastNameElm.value)) {
             this.successMsg(lastNameMsgElm, "Looks good.");
+            this.isValidLastName = true;
         } else {
             this.failureMsg(lastNameMsgElm, "Cannot be empty.");
+            this.isValidLastName = false;
         }
     },
 
@@ -83,8 +91,10 @@ const UI = {
 
         if(/^[a-z]{3,}\d*$/.test(usernameElm.value) && usernameElm.value.length <=12) {
             this.successMsg(usernameMsgElm, "Looks good.");
+            this.isValidUsername = true;
         } else {
             this.failureMsg(usernameMsgElm, "Cannot use any capital letters.");
+            this.isValidUsername = false;
         }
     },
 
@@ -93,8 +103,10 @@ const UI = {
 
         if(/^[a-z]{1,}\d*\.?[a-z]*\d*\.?[a-z]*\d*[a-z]*@[a-z]{1,}\.?[a-z]*\.[a-z]{1,}$/.test(emailElm.value)) {
             this.successMsg(emailMsgElm, "Looks good.");
+            this.isValidEmail = true;
         } else {
             this.failureMsg(emailMsgElm, "Invalid email.");
+            this.isValidEmail = false;
         }
     },
 
@@ -102,10 +114,11 @@ const UI = {
         const {passwordElm, passwordMsgElm} = this.selector();
 
         if(/^[A-z]{1,}@?_?\d{1,}$/.test(passwordElm.value)) {
-            console.log(passwordElm.value);
             this.successMsg(passwordMsgElm, "Looks good.");
+            this.isValidPassword = true;
         } else {
-            this.failureMsg(passwordMsgElm, "Invalid Password.")
+            this.failureMsg(passwordMsgElm, "Invalid Password.");
+            this.isValidPassword = false;
         }
     },
 
@@ -113,9 +126,11 @@ const UI = {
         const {passwordElm, confirmElm, confirmMsgElm} = this.selector();
 
         if(passwordElm.value === confirmElm.value) {
-            this.successMsg(confirmMsgElm, "Password matched.")
+            this.successMsg(confirmMsgElm, "Password matched.");
+            this.isValidConfirm = true;
         } else {
-            this.failureMsg(confirmMsgElm, "Password doesn't match.")
+            this.failureMsg(confirmMsgElm, "Password doesn't match.");
+            this.isValidConfirm = false;
         }
     },
 
@@ -124,8 +139,10 @@ const UI = {
 
         if(/^(\+88)?(01)\d{9}$/.test(phoneElm.value)) {
             this.successMsg(phoneMsgElm, "Looks good.");
+            this.isValidPhone = true;
         } else {
-            this.failureMsg(phoneMsgElm, "Invalid phone number.")
+            this.failureMsg(phoneMsgElm, "Invalid phone number.");
+            this.isValidPhone = false;
         }
     },
 
@@ -161,7 +178,7 @@ const UI = {
         });
 
         signUpBtnElm.addEventListener("click", e => {
-            if(this.validSubmission.some(i => i === false) || this.validSubmission.length < 7) {
+            if(!this.isValidFirstName || !this.isValidLastName || !this.isValidUsername || !this.isValidEmail || !this.isValidPassword || !this.isValidConfirm || !this.isValidPhone) {
                 e.preventDefault();
                 this.showMessage("Please fill everything correctly.");
             }
